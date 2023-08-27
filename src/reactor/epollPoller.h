@@ -15,14 +15,21 @@ private:
 public:
     epollPoller(/* args */);
     ~epollPoller();
+
+    int32_t getEpollFd() {
+        return _epoll_fd;
+    }
+
+    poll(ChannelList* activeChannels, int32_t timeout);
+
 private:
-    int epollFd_;
+    int _epoll_fd;
 };
 
 epollPoller::epollPoller(/* args */)
 {
-    epollFd_ = epoll_create1(EPOLL_CLOEXEC);
-    assert(epollFd_ > 0);
+    _epoll_fd = epoll_create1(EPOLL_CLOEXEC);
+    assert(_epoll_fd > 0);
 }
 
 epollPoller::~epollPoller()
