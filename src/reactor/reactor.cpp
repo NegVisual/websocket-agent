@@ -2,7 +2,10 @@
 
 namespace websocketagent {
 namespace reactor {
-    FDReactor()
+    FDReactor::FDReactor() {
+        epollpoller = std::make_shared<epollPoller>();
+    }
 
+    FDReactor::~FDReactor() {}
 }
 }
