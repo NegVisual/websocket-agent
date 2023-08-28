@@ -4,38 +4,32 @@
 #include <sys/socket.h>
 #include <assert.h>
 #include <memory>
+#include "channel.h"
 
 namespace websocketagent {
 namespace reactor {
 
-class epollPoller
+class Channel;
+typedef std::vector<Channel*> ChannelList;
+
+class EpollPoller
 {
-private:
-    /* data */
-public:
-    epollPoller(/* args */);
-    ~epollPoller();
+    public:
+        EpollPoller(/* args */);
+        ~EpollPoller();
 
-    int32_t getEpollFd() {
-        return _epoll_fd;
-    }
+        int32_t getEpollFd() {
+            return _epoll_fd;
+        }
 
-    poll(ChannelList* activeChannels, int32_t timeout);
+        void poll(ChannelList* activeChannels, int32_t timeout);
 
-private:
-    int _epoll_fd;
+        void fillActiveChannels(int numEvents, ChannelList* activeChannels) const;
+
+    private:
+        int _epoll_fd;
 };
 
-epollPoller::epollPoller(/* args */)
-{
-    _epoll_fd = epoll_create1(EPOLL_CLOEXEC);
-    assert(_epoll_fd > 0);
-}
-
-epollPoller::~epollPoller()
-{
-}
-
-typedef std::shared_ptr<epollPoller> epollPollerPtr;
+typedef std::shared_ptr<EpollPoller> EpollPollerPtr;
 }    
 }

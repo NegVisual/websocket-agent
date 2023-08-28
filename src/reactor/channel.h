@@ -5,11 +5,15 @@
 namespace websocketagent {
 namespace reactor {
 
+class FDReactor;
 typedef std::function<void()> CallBack;
+typedef std::shared_ptr<FDReactor> FDReactorPtr;
 
 class Channel {
     public:
-        explicit Channel (FDReactorPtr reactor, int fd);
+        explicit Channel(FDReactorPtr reactor, int fd);
+        
+        ~Channel();
 
         int getFd();
 
