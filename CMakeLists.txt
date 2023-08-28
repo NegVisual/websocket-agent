@@ -6,7 +6,8 @@ project(websocket-agent)  # 设置项目名称
 add_executable(${PROJECT_NAME} 
                 main.cpp
                 src/reactor/reactor.cpp
-                src/reactor/channel.cpp)
+                src/reactor/channel.cpp
+                src/reactor/epollPoller.cpp)
 
 # 引入头文件目录
 target_include_directories(${PROJECT_NAME} 

@@ -15,7 +15,7 @@ typedef std::vector<Channel*> ChannelList;
 class EpollPoller
 {
     public:
-        EpollPoller(/* args */);
+        EpollPoller();
         ~EpollPoller();
 
         int32_t getEpollFd() {
@@ -29,7 +29,5 @@ class EpollPoller
     private:
         int _epoll_fd;
 };
-
-typedef std::shared_ptr<EpollPoller> EpollPollerPtr;
 }    
 }

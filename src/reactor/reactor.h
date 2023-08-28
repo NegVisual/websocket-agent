@@ -6,6 +6,9 @@
 namespace websocketagent {
 namespace reactor {
 
+class EpollPoller;
+typedef std::shared_ptr<EpollPoller> EpollPollerPtr;
+
 class FDReactor {
     public:
         FDReactor();
