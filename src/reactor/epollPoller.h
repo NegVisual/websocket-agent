@@ -13,10 +13,13 @@ class Channel;
 typedef std::shared_ptr<Channel> ChannelPtr;
 typedef std::vector<ChannelPtr> ChannelList;
 
+class FDReactor;
+typedef std::shared_ptr<FDReactor> FDReactorPtr;
+
 class EpollPoller
 {
     public:
-        EpollPoller();
+        EpollPoller(FDReactorPtr reactor);
         ~EpollPoller();
 
         int32_t getEpollFd() {
@@ -35,6 +38,7 @@ class EpollPoller
 
     private:
         int _epoll_fd;
+        FDReactorPtr _reactor;
 };
 }    
 }

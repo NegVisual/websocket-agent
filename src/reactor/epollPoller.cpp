@@ -1,10 +1,11 @@
 #include "epollPoller.h"
 #include <unistd.h>
+#include <string.h>
 
 namespace websocketagent {
 namespace reactor {
 
-EpollPoller::EpollPoller()
+EpollPoller::EpollPoller(FDReactorPtr reactor) : _reactor(reactor)
 {
     _epoll_fd = epoll_create1(EPOLL_CLOEXEC);
     assert(_epoll_fd > 0);
@@ -20,7 +21,13 @@ ChannelList EpollPoller::poll(int32_t timeout) {
     return channel_list;
 }
 
-void EpollPoller::epoll_add(ChannelPtr Channel, int timeout) {
+void EpollPoller::epoll_add(ChannelPtr channel, int timeout) {
+    struct epoll_event event;
+    memset(&event, 0, sizeof event);
+    event.events = channel->getEvents();
+
+
+
     return;
 }
 

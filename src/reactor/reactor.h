@@ -9,7 +9,7 @@ namespace reactor {
 class EpollPoller;
 typedef std::shared_ptr<EpollPoller> EpollPollerPtr;
 
-class FDReactor {
+class FDReactor : public std::enable_shared_from_this<FDReactor>{
     public:
         FDReactor();
 

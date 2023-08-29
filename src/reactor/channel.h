@@ -6,8 +6,8 @@ namespace websocketagent {
 namespace reactor {
 
 class FDReactor;
-typedef std::function<void()> CallBack;
 typedef std::shared_ptr<FDReactor> FDReactorPtr;
+typedef std::function<void()> CallBack;
 
 class Channel {
     public:
@@ -18,6 +18,10 @@ class Channel {
         int getFd();
 
         void setFd(int fd);
+
+        int getEvents() const { 
+            return _events; 
+        }
 
         void setReadHandler(CallBack &&readHandler) { 
             _readHandler = readHandler; 
@@ -44,6 +48,8 @@ class Channel {
         void handleError();
 
     private:
+        int _events;
+
         FDReactorPtr _reactor;
         int _fd;
         CallBack _readHandler;
