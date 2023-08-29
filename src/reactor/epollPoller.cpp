@@ -15,8 +15,21 @@ EpollPoller::~EpollPoller()
     close(_epoll_fd);
 }
 
-void EpollPoller::poll(ChannelList* activeChannels, int32_t timeout) {
+ChannelList EpollPoller::poll(int32_t timeout) {
+    ChannelList channel_list;
+    return channel_list;
+}
 
+void EpollPoller::epoll_add(ChannelPtr Channel, int timeout) {
+    return;
+}
+
+void EpollPoller::epoll_mod(ChannelPtr Channel, int timeout) {
+    return;
+}
+        
+void EpollPoller::epoll_del(ChannelPtr Channel, int timeout) {
+    return;
 }
 
 }
