@@ -1,5 +1,6 @@
 #pragma once
 #include <memory>
+#include <unordered_map>
 #include "singleton.h"
 #include "epollPoller.h"
 
@@ -9,25 +10,46 @@ namespace reactor {
 class EpollPoller;
 typedef std::shared_ptr<EpollPoller> EpollPollerPtr;
 
-class FDReactor : public std::enable_shared_from_this<FDReactor>{
+class Channel;
+typedef std::shared_ptr<Channel> ChannelPtr;
+
+class FDReactor {
+    typedef std::weak_ptr<FDReactor> FDReactorWeakPtr;
     public:
-        FDReactor();
+        FDReactor() {};
+
+        static std::shared_ptr<FDReactor> alloc();
 
         virtual ~FDReactor();
-
-        void init() {};
-
-        void init(uint32_t ip, uint16_t port) {};
         
-    private:
-        int32_t createEventfd();
+        std::unordered_map<int, ChannelPtr>& getFd2Channel() {
+            return _fd2channel;
+        }
 
-        EpollPollerPtr epollpoller;
+    private:
+
+    protected:
+        int32_t createEventfd();
+        FDReactorWeakPtr _self_ptr; 
+        EpollPollerPtr _epollpoller;
         int _event_fd;
         int _epoll_fd;
         int _timer_fd;
+        std::unordered_map<int, ChannelPtr> _fd2channel;
 };
 
-class MainFDReactor : public websocketagent::base::Singleton<MainFDReactor>, public FDReactor {};
+class SlaveFDReactor : public FDReactor {
+    public:
+        void init() {
+            _epollpoller = std::make_shared<EpollPoller>(_self_ptr.lock());
+            // _epoll_fd = _epollpoller->getEpollFd();
+            _event_fd = createEventfd();
+        };
+};
+
+class MainFDReactor : public websocketagent::base::Singleton<MainFDReactor>, public FDReactor {
+    public:
+        void init(uint32_t ip, uint16_t port) {};
+};
 } // namespace websocketagent    
 } // namespace reactor

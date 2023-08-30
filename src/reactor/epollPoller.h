@@ -4,6 +4,7 @@
 #include <sys/socket.h>
 #include <assert.h>
 #include <memory>
+#include <vector>
 #include "channel.h"
 
 namespace websocketagent {
@@ -26,7 +27,7 @@ class EpollPoller
             return _epoll_fd;
         }
 
-        ChannelList poll(int32_t timeout);
+        ChannelList poll(int32_t timeout = 10000);
 
         void epoll_add(ChannelPtr Channel, int timeout);
 
@@ -34,11 +35,12 @@ class EpollPoller
         
         void epoll_del(ChannelPtr Channel, int timeout);
 
-        void fillActiveChannels(int numEvents, ChannelList* activeChannels) const;
+        void fillActiveChannels(int numEvents, ChannelList& activeChannels) const;
 
     private:
         int _epoll_fd;
         FDReactorPtr _reactor;
+        std::vector<epoll_event> _epoll_events;
 };
 }    
 }

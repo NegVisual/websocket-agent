@@ -23,6 +23,18 @@ class Channel {
             return _events; 
         }
 
+        void setEvents(int event) { 
+            _events = event; 
+        }
+
+        int getReceiveEvent() const { 
+            return _receive_event; 
+        }
+
+        void setReceiveEvent(int receiveEvent) { 
+            _receive_event = receiveEvent; 
+        }
+
         void setReadHandler(CallBack &&readHandler) { 
             _readHandler = readHandler; 
         }
@@ -48,7 +60,8 @@ class Channel {
         void handleError();
 
     private:
-        int _events;
+        int _events;        //epoll 需要监听的事件类型
+        int _receive_event; //事件发生时，真实的事件类型
 
         FDReactorPtr _reactor;
         int _fd;

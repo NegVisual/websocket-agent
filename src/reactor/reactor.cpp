@@ -3,11 +3,6 @@
 
 namespace websocketagent {
 namespace reactor {
-    FDReactor::FDReactor() {
-        epollpoller = std::make_shared<EpollPoller>(shared_from_this());
-        _epoll_fd = epollpoller->getEpollFd();
-        _event_fd = createEventfd();
-    }
 
     int32_t FDReactor::createEventfd()
     {
@@ -17,6 +12,12 @@ namespace reactor {
             abort();
         }
         return evtfd;
+    }
+
+    std::shared_ptr<FDReactor> FDReactor::alloc() {
+        std::shared_ptr<FDReactor> ret(new(std::nothrow) FDReactor());
+        ret->_self_ptr = ret;
+        return ret;
     }
 
     FDReactor::~FDReactor() {}
