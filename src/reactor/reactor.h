@@ -40,11 +40,7 @@ class FDReactor {
 
 class SlaveFDReactor : public FDReactor {
     public:
-        void init() {
-            _epollpoller = std::make_shared<EpollPoller>(_self_ptr.lock());
-            // _epoll_fd = _epollpoller->getEpollFd();
-            _event_fd = createEventfd();
-        };
+        void init();
 };
 
 class MainFDReactor : public websocketagent::base::Singleton<MainFDReactor>, public FDReactor {

@@ -21,5 +21,15 @@ namespace reactor {
     }
 
     FDReactor::~FDReactor() {}
+
+    void SlaveFDReactor::init() {
+        _epollpoller = std::make_shared<EpollPoller>(_self_ptr.lock());
+        if(_epollpoller.get() != nullptr) {
+            _epoll_fd = _epollpoller->getEpollFd();
+        } else {
+            abort();
+        }
+        _event_fd = createEventfd();
+    };
 }
 }
