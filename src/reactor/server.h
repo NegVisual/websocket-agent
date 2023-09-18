@@ -13,7 +13,7 @@ class Server {
     //     int _listenfd;
     //     std::shared_ptr<Channel> acceptChannel_;
     //     std::unique_ptr<EventLoopThreadPool> eventLoopThreadPool_;
-}
+};
 
 }
 }

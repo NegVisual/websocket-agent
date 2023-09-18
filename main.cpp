@@ -9,7 +9,7 @@
 int main() {
     int port = 3581;
     int slave_number = 5;
-    websocketagent::reactor::MainFDReactor::getInstance()->init(INADDR_ANY, port);
+    websocketagent::reactor::MainFDReactor::getInstance()->init(port);
     // Server server(slave_number);
     // server.start();
     while (true) {
