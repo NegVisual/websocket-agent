@@ -22,7 +22,6 @@ class Acceptor : websocketagent::base::Noncopyable
 
         bool listening_;
         int idleFd_;
-        int idleFd_;
 };
 }
 }

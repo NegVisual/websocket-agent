@@ -5,12 +5,13 @@
 #include <unistd.h>
 #include <netinet/in.h>
 #include "reactor.h"
+#include "server.h"
 
 int main() {
     int port = 3581;
     int slave_number = 5;
     websocketagent::reactor::MainFDReactor::getInstance()->init(port);
-    // Server server(slave_number);
+    websocketagent::reactor::Server server(slave_number); //服务启动 增加
     // server.start();
     while (true) {
         
