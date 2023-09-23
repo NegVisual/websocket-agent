@@ -46,11 +46,14 @@ class SlaveFDReactor : public FDReactor {
 class MainFDReactor : public websocketagent::base::Singleton<MainFDReactor>, public FDReactor {
     public:
         void init(uint16_t port);
+
+        int32_t getListenFd();
     private:
         int32_t socket_bind_listen(int port);
     private:
         std::shared_ptr<Channel> _acceptChannel;
         int32_t _listenfd;
 };
+
 } // namespace websocketagent    
 } // namespace reactor

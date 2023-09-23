@@ -5,6 +5,7 @@
 #include <sys/socket.h>
 #include <strings.h>
 #include <unistd.h>
+#include <memory>
 
 namespace websocketagent {
 namespace reactor {
@@ -48,7 +49,13 @@ namespace reactor {
 
         //创建acceptor
         _listenfd = socket_bind_listen(port);
+
+        _acceptChannel = std::make_shared<Channel>(MainFDReactor::getInstance(), _listenfd);
     };
+
+    int32_t MainFDReactor::getListenFd() {
+        return _listenfd;
+    }
 
     int MainFDReactor::socket_bind_listen(int port) {
         // 检查port值，取正确区间范围

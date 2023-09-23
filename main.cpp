@@ -11,8 +11,8 @@ int main() {
     int port = 3581;
     int slave_number = 5;
     websocketagent::reactor::MainFDReactor::getInstance()->init(port);
-    websocketagent::reactor::Server server(slave_number); //服务启动 增加
-    // server.start();
+    websocketagent::reactor::Server server(slave_number); //服务启动 增加slave reactor
+    server.start();
     while (true) {
         
     }
