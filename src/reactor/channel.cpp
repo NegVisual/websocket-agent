@@ -9,8 +9,6 @@ namespace reactor {
 
     int Channel::getFd() { return _fd; }
 
-    void Channel::setFd(int fd) { _fd = fd; }
-
     void Channel::handleRead() {
         if (_readHandler) {
             _readHandler();
@@ -33,6 +31,26 @@ namespace reactor {
         if (_errorHandler) {
             _errorHandler();
         }
+    }
+
+    void Channel::handleEvents() {
+        _events = 0;
+        if ((_receive_event & EPOLLHUP) && !(_receive_event & EPOLLIN)) {
+        _events = 0;
+        return;
+        }
+        if (_events & EPOLLERR) {
+            if (_errorHandler) handleError();
+            _events = 0;
+            return;
+        }
+        if (_events & (EPOLLIN | EPOLLPRI | EPOLLRDHUP)) {
+            handleRead();
+        }
+        if (_receive_event & EPOLLOUT) {
+            handleWrite();
+        }
+        handleConn();
     }
 }
 }

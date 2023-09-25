@@ -13,16 +13,22 @@ namespace reactor {
             slave_reactor->init();
             _slaveFDReactorPool->at(i) = slave_reactor;
         }
-
+        //设置listenFd
         setListenFd(MainFDReactor::getInstance()->getListenFd());
+        //设置acceptChannel
+        setAcceptChannel(MainFDReactor::getInstance()->getAcceptChannel());
     }
 
     void Server::start() {
-
+        MainFDReactor::getInstance()->loop();
     }
 
     void Server::setListenFd(int32_t listenfd) {
         _listenfd = listenfd;
+    }
+
+    void Server::setAcceptChannel(std::shared_ptr<Channel> acceptChannel) {
+        _acceptChannel = acceptChannel;
     }
 }
 }

@@ -5,7 +5,9 @@
 namespace websocketagent {
 namespace reactor {
 
-EpollPoller::EpollPoller(FDReactorPtr reactor) : _reactor(reactor)
+const int EVENTSNUM = 4096;
+
+EpollPoller::EpollPoller(FDReactorPtr reactor) : _reactor(reactor), _epoll_events(EVENTSNUM)
 {
     _epoll_fd = epoll_create1(EPOLL_CLOEXEC);
     assert(_epoll_fd > 0);
@@ -21,16 +23,33 @@ ChannelList EpollPoller::poll(int32_t timeout) {
     int numEvents = epoll_wait(_epoll_fd, &*_epoll_events.begin(),
         static_cast<int>(_epoll_events.size()), timeout);
 
+    std::cout << "EpollPoller::poll numEvents:" << numEvents << std::endl;
+
     if (numEvents < 0) perror("epoll wait error");
+    
+    int savedErrno = errno;
 
-    fillActiveChannels(numEvents, channel_list);
-
+    if (numEvents > 0)
+    {
+        fillActiveChannels(numEvents, channel_list);
+    }else if (numEvents == 0) {
+        std::cout << "nothing happened" << std::endl;
+    }else {
+        // error happens, log uncommon ones
+        if (savedErrno != EINTR)
+        {
+            errno = savedErrno;
+            std::cout << "EPollPoller::poll()" << std::endl;
+        }
+    }
     return channel_list;
 }
 
 void EpollPoller::epoll_add(ChannelPtr channel, int timeout) {
     int fd = channel->getFd();
-    _reactor->getFd2Channel()[fd] = channel;
+    if (_reactor.get() != nullptr) {
+        _reactor->getFd2Channel()[fd] = channel;
+    }
     
     struct epoll_event event;
     memset(&event, 0, sizeof event);

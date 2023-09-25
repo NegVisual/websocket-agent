@@ -17,8 +17,6 @@ class Channel {
 
         int getFd();
 
-        void setFd(int fd);
-
         int getEvents() const { 
             return _events; 
         }
@@ -58,6 +56,8 @@ class Channel {
         void handleConn();
 
         void handleError();
+
+        void handleEvents();
 
     private:
         int _events;        //epoll 需要监听的事件类型

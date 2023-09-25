@@ -27,7 +27,7 @@ class EpollPoller
             return _epoll_fd;
         }
 
-        ChannelList poll(int32_t timeout = 10000);
+        ChannelList poll(int32_t timeout = 1000);
 
         void epoll_add(ChannelPtr Channel, int timeout);
 

@@ -26,6 +26,8 @@ class FDReactor {
             return _fd2channel;
         }
 
+        void loop();
+
     private:
 
     protected:
@@ -36,6 +38,8 @@ class FDReactor {
         int _epoll_fd;
         int _timer_fd;
         std::unordered_map<int, ChannelPtr> _fd2channel;
+
+        bool _eventHandling;
 };
 
 class SlaveFDReactor : public FDReactor {
@@ -48,6 +52,8 @@ class MainFDReactor : public websocketagent::base::Singleton<MainFDReactor>, pub
         void init(uint16_t port);
 
         int32_t getListenFd();
+
+        std::shared_ptr<Channel> getAcceptChannel();
     private:
         int32_t socket_bind_listen(int port);
     private:

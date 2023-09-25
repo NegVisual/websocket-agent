@@ -12,9 +12,7 @@ int main() {
     int slave_number = 5;
     websocketagent::reactor::MainFDReactor::getInstance()->init(port);
     websocketagent::reactor::Server server(slave_number); //服务启动 增加slave reactor
-    server.start();
-    while (true) {
-        
-    }
+    server.start();//各个reactor epoll_add 初始化的fd ， 并通过epoll_fd 监听事件
+    
     return 0;
 }

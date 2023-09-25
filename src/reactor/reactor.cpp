@@ -26,6 +26,21 @@ namespace reactor {
         return ret;
     }
 
+    void FDReactor::loop() {
+        ChannelList active_events;
+
+        while(true) {
+            active_events = _epollpoller->poll();
+
+            _eventHandling = true;
+            for (auto& it : active_events) {
+                std::cout << "epoll return" << std::endl;
+                it->handleEvents();
+           }
+           _eventHandling = false;
+        }
+    }
+
     FDReactor::~FDReactor() {}
 
     void SlaveFDReactor::init() {
@@ -42,7 +57,9 @@ namespace reactor {
         _epollpoller = std::make_shared<EpollPoller>(_self_ptr.lock());
         if(_epollpoller.get() != nullptr) {
             _epoll_fd = _epollpoller->getEpollFd();
+            std::cout << "MainFDReactor::init success! epoll_fd:" << _epoll_fd << std::endl;
         } else {
+            std::cout << "MainFDReactor::init failed!" << std::endl;
             abort();
         }
         _event_fd = createEventfd();
@@ -51,10 +68,16 @@ namespace reactor {
         _listenfd = socket_bind_listen(port);
 
         _acceptChannel = std::make_shared<Channel>(MainFDReactor::getInstance(), _listenfd);
+
+        _epollpoller->epoll_add(_acceptChannel, 0);
     };
 
     int32_t MainFDReactor::getListenFd() {
         return _listenfd;
+    }
+
+    std::shared_ptr<Channel> MainFDReactor::getAcceptChannel() {
+        return _acceptChannel;
     }
 
     int MainFDReactor::socket_bind_listen(int port) {
