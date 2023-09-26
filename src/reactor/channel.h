@@ -11,8 +11,6 @@ typedef std::function<void()> CallBack;
 
 class Channel {
     public:
-        explicit Channel(FDReactorPtr reactor, int fd);
-
         Channel(int fd);
         
         ~Channel();
@@ -71,11 +69,6 @@ class Channel {
         CallBack _writeHandler;
         CallBack _errorHandler;
         CallBack _connHandler;
-};
-
-class AcceptChannel : public Channel {
-    public:
-        AcceptChannel(int fd);
 };
 
 }

@@ -54,9 +54,11 @@ class MainFDReactor : public websocketagent::base::Singleton<MainFDReactor>, pub
     private:
         int32_t socket_bind_listen(int port);
     private:
-        std::shared_ptr<AcceptChannel> _acceptChannel;
+        std::shared_ptr<Channel> _acceptChannel;
         int32_t _listenfd;
 };
+
+typedef std::vector<std::shared_ptr<SlaveFDReactor>> SlaveFDReactorPool;
 
 } // namespace websocketagent    
 } // namespace reactor

@@ -1,12 +1,10 @@
 #pragma once
 #include <memory>
 #include "channel.h"
-#include "reactor.h"
+#include "reactorPool.h"
 
 namespace websocketagent {
 namespace reactor {
-
-typedef std::vector<std::shared_ptr<SlaveFDReactor>> SlaveFDReactorPool;
 
 class Server {
     public:
@@ -16,11 +14,15 @@ class Server {
         void setListenFd(int32_t listenfd);
 
         void setAcceptChannel(std::shared_ptr<Channel> acceptChannel);
+
+        void handNewConn();
+
+        void handThisConn();
     private:
         int _reactorNum;
         int32_t _listenfd;
         std::shared_ptr<Channel> _acceptChannel;
-        std::unique_ptr<SlaveFDReactorPool> _slaveFDReactorPool;
+        std::shared_ptr<ReactorThreadPool> _slaveFDReactorPoolPtr;
 };
 
 }

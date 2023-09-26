@@ -1,25 +1,43 @@
 #include "server.h"
 #include "reactor.h"
+#include <cstring>
+#include <arpa/inet.h>
+#include <netinet/in.h>
 
 namespace websocketagent {
 namespace reactor {
     Server::Server(int reactorNum): _reactorNum(reactorNum) {
-         // 使用 std::make_unique 初始化 _slaveFDReactorPool
-        _slaveFDReactorPool = std::make_unique<SlaveFDReactorPool>(_reactorNum);
-
-        // 初始化 _slaveFDReactorPool 中的元素
-        for (int i = 0; i < _reactorNum; ++i) {
-            auto slave_reactor = std::make_shared<SlaveFDReactor>();
-            slave_reactor->init();
-            _slaveFDReactorPool->at(i) = slave_reactor;
-        }
+        _slaveFDReactorPoolPtr = std::make_shared<ReactorThreadPool>(reactorNum);
         //设置listenFd
         setListenFd(MainFDReactor::getInstance()->getListenFd());
         //设置acceptChannel
         setAcceptChannel(MainFDReactor::getInstance()->getAcceptChannel());
     }
 
+    void Server::handNewConn() {
+        std::cout << "Server::handNewConn" << std::endl;
+        struct sockaddr_in client_addr;
+        memset(&client_addr, 0, sizeof(struct sockaddr_in));
+        socklen_t client_addr_len = sizeof(client_addr);
+        int accept_fd = 0;
+        if ((accept_fd = accept(_listenfd, (struct sockaddr *)&client_addr,
+                             &client_addr_len)) > 0) {
+            //accept 新的连接
+            std::shared_ptr<SlaveFDReactor> slave = _slaveFDReactorPoolPtr->getNextSlaveReactor();
+            std::cout << "New connection from " << inet_ntoa(client_addr.sin_addr) << ":" << ntohs(client_addr.sin_port) <<std::endl;
+        }else {
+
+        }
+
+    }
+
+    void Server::handThisConn() {
+        std::cout << "Server::handThisConn" << std::endl;
+    }
+
     void Server::start() {
+        _acceptChannel->setReadHandler(std::bind(&Server::handNewConn, this));
+        _acceptChannel->setConnHandler(std::bind(&Server::handThisConn, this));
         MainFDReactor::getInstance()->loop();
     }
 

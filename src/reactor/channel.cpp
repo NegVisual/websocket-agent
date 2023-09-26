@@ -3,12 +3,6 @@
 
 namespace websocketagent {
 namespace reactor {
-    Channel::Channel(FDReactorPtr reactor, int fd)
-    : _fd(fd) {
-        _reactor = reactor;
-        std::cout << "Channel::Channel: _reactor:" << (_reactor.get() == nullptr) << std::endl; 
-    }
-
     Channel::Channel(int fd)
     : _fd(fd) {
         std::cout << "Channel::Channel: _reactor:" << (_reactor.get() == nullptr) << std::endl; 
@@ -32,6 +26,7 @@ namespace reactor {
     }
 
     void Channel::handleConn() {
+        std::cout << "Channel::handleConn: new connect receeived" <<std::endl;
         if (_connHandler) {
             _connHandler();
         }
@@ -45,9 +40,10 @@ namespace reactor {
 
     void Channel::handleEvents() {
         _events = 0;
+        std::cout << "Channel::handleEvents" << std::endl;
         if ((_receive_event & EPOLLHUP) && !(_receive_event & EPOLLIN)) {
-        _events = 0;
-        return;
+            _events = 0;
+            return;
         }
         if (_events & EPOLLERR) {
             if (_errorHandler) handleError();
@@ -62,10 +58,6 @@ namespace reactor {
             handleWrite();
         }
         handleConn();
-    }
-
-    AcceptChannel::AcceptChannel(int fd): Channel(fd) {
-        _reactor = MainFDReactor::getInstance();
     }
 }
 }

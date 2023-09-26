@@ -10,6 +10,7 @@ add_executable(${PROJECT_NAME}
                 src/reactor/reactor.cpp
                 src/reactor/channel.cpp
                 src/reactor/server.cpp
+                src/reactor/reactorPool.cpp
                 src/reactor/epollPoller.cpp)
 
 # 引入头文件目录

@@ -66,8 +66,8 @@ namespace reactor {
         //创建acceptor
         _listenfd = socket_bind_listen(port);
 
-        _acceptChannel = std::make_shared<AcceptChannel>(_listenfd);
-        _acceptChannel->setEvents(EPOLLIN | EPOLLET);
+        _acceptChannel = std::make_shared<Channel>(_listenfd);
+         _acceptChannel->setEvents(EPOLLIN | EPOLLET);
         _epollpoller->epoll_add(_acceptChannel, 0);
     };
 
