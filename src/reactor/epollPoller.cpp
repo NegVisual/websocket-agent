@@ -47,9 +47,7 @@ ChannelList EpollPoller::poll(int32_t timeout) {
 
 void EpollPoller::epoll_add(ChannelPtr channel, int timeout) {
     int fd = channel->getFd();
-    if (_reactor.get() != nullptr) {
-        _reactor->getFd2Channel()[fd] = channel;
-    }
+    getFd2Channel()[fd] = channel;
     
     struct epoll_event event;
     memset(&event, 0, sizeof event);
@@ -71,16 +69,21 @@ void EpollPoller::epoll_del(ChannelPtr Channel, int timeout) {
     return;
 }
 
-void EpollPoller::fillActiveChannels(int numEvents, ChannelList& activeChannels) const
+std::unordered_map<int, ChannelPtr>& EpollPoller::getFd2Channel() {
+    return _fd2channel;
+}
+
+void EpollPoller::fillActiveChannels(int numEvents, ChannelList& activeChannels)
 {
-    auto channel_list = _reactor->getFd2Channel();
+    auto channel_map = getFd2Channel();
+    std::cout << "EpollPoller::fillActiveChannels: channel_map.size" << channel_map.size() << std::endl;
     for (int i = 0; i < numEvents; ++i)
     {
         int fd = _epoll_events[i].data.fd;
 
-        assert(channel_list.find(fd) != channel_list.end());
+        assert(channel_map.find(fd) != channel_map.end());
 
-        auto channel = channel_list[fd];
+        auto channel = channel_map[fd];
 
         channel->setReceiveEvent(_epoll_events[i].events);
         activeChannels.push_back(channel);

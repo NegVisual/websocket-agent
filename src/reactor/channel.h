@@ -12,6 +12,8 @@ typedef std::function<void()> CallBack;
 class Channel {
     public:
         explicit Channel(FDReactorPtr reactor, int fd);
+
+        Channel(int fd);
         
         ~Channel();
 
@@ -58,17 +60,22 @@ class Channel {
         void handleError();
 
         void handleEvents();
+    public:
+        FDReactorPtr _reactor;
+        int _fd;
 
     private:
         int _events;        //epoll 需要监听的事件类型
         int _receive_event; //事件发生时，真实的事件类型
-
-        FDReactorPtr _reactor;
-        int _fd;
         CallBack _readHandler;
         CallBack _writeHandler;
         CallBack _errorHandler;
         CallBack _connHandler;
+};
+
+class AcceptChannel : public Channel {
+    public:
+        AcceptChannel(int fd);
 };
 
 }

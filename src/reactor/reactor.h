@@ -11,6 +11,7 @@ class EpollPoller;
 typedef std::shared_ptr<EpollPoller> EpollPollerPtr;
 
 class Channel;
+class AcceptChannel;
 typedef std::shared_ptr<Channel> ChannelPtr;
 
 class FDReactor {
@@ -21,10 +22,6 @@ class FDReactor {
         static std::shared_ptr<FDReactor> alloc();
 
         virtual ~FDReactor();
-        
-        std::unordered_map<int, ChannelPtr>& getFd2Channel() {
-            return _fd2channel;
-        }
 
         void loop();
 
@@ -57,7 +54,7 @@ class MainFDReactor : public websocketagent::base::Singleton<MainFDReactor>, pub
     private:
         int32_t socket_bind_listen(int port);
     private:
-        std::shared_ptr<Channel> _acceptChannel;
+        std::shared_ptr<AcceptChannel> _acceptChannel;
         int32_t _listenfd;
 };
 

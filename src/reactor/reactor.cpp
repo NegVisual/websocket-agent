@@ -9,7 +9,6 @@
 
 namespace websocketagent {
 namespace reactor {
-
     int32_t FDReactor::createEventfd()
     {
         int32_t evtfd = eventfd(0, EFD_NONBLOCK | EFD_CLOEXEC);
@@ -67,8 +66,8 @@ namespace reactor {
         //创建acceptor
         _listenfd = socket_bind_listen(port);
 
-        _acceptChannel = std::make_shared<Channel>(MainFDReactor::getInstance(), _listenfd);
-
+        _acceptChannel = std::make_shared<AcceptChannel>(_listenfd);
+        _acceptChannel->setEvents(EPOLLIN | EPOLLET);
         _epollpoller->epoll_add(_acceptChannel, 0);
     };
 

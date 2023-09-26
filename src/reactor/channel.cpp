@@ -1,9 +1,19 @@
 #include "channel.h"
+#include "reactor.h"
 
 namespace websocketagent {
 namespace reactor {
     Channel::Channel(FDReactorPtr reactor, int fd)
-    : _reactor(reactor), _fd(fd) {}
+    : _fd(fd) {
+        _reactor = reactor;
+        std::cout << "Channel::Channel: _reactor:" << (_reactor.get() == nullptr) << std::endl; 
+    }
+
+    Channel::Channel(int fd)
+    : _fd(fd) {
+        std::cout << "Channel::Channel: _reactor:" << (_reactor.get() == nullptr) << std::endl; 
+    }
+
 
     Channel::~Channel() {}
 
@@ -45,12 +55,17 @@ namespace reactor {
             return;
         }
         if (_events & (EPOLLIN | EPOLLPRI | EPOLLRDHUP)) {
+            std::cout << "Channel::handleEvents" << std::endl;
             handleRead();
         }
         if (_receive_event & EPOLLOUT) {
             handleWrite();
         }
         handleConn();
+    }
+
+    AcceptChannel::AcceptChannel(int fd): Channel(fd) {
+        _reactor = MainFDReactor::getInstance();
     }
 }
 }
