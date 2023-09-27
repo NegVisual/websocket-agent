@@ -7,7 +7,7 @@ set(CMAKE_CXX_FLAGS "-std=c++14")
 # 添加可执行文件
 add_executable(${PROJECT_NAME} 
                 main.cpp
-                src/base/thread.cpp
+                src/base/slaveThread.cpp
                 src/reactor/reactor.cpp
                 src/reactor/channel.cpp
                 src/reactor/server.cpp
