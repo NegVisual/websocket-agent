@@ -25,12 +25,12 @@ class FDReactor {
 
         void loop();
 
+        EpollPollerPtr _epollpoller;
     private:
 
     protected:
         int32_t createEventfd();
         FDReactorWeakPtr _self_ptr; 
-        EpollPollerPtr _epollpoller;
         int _event_fd;
         int _epoll_fd;
         int _timer_fd;

@@ -40,7 +40,6 @@ namespace reactor {
 
     void Channel::handleEvents() {
         _events = 0;
-        std::cout << "Channel::handleEvents" << std::endl;
         if ((_receive_event & EPOLLHUP) && !(_receive_event & EPOLLIN)) {
             _events = 0;
             return;
