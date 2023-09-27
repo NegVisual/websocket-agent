@@ -45,12 +45,12 @@ namespace reactor {
             _events = 0;
             return;
         }
-        if (_events & EPOLLERR) {
+        if (_receive_event & EPOLLERR) {
             if (_errorHandler) handleError();
             _events = 0;
             return;
         }
-        if (_events & (EPOLLIN | EPOLLPRI | EPOLLRDHUP)) {
+        if (_receive_event & (EPOLLIN | EPOLLPRI | EPOLLRDHUP)) {
             std::cout << "Channel::handleEvents" << std::endl;
             handleRead();
         }
