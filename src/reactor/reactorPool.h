@@ -16,6 +16,7 @@ class ReactorThreadPool : public websocketagent::base::Noncopyable {
 
         std::shared_ptr<SlaveFDReactor> getNextSlaveReactor();
 
+        void start();
     private:
         int _next;
         int _numThreads;

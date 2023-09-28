@@ -39,6 +39,7 @@ namespace reactor {
     void Server::start() {
         _acceptChannel->setReadHandler(std::bind(&Server::handNewConn, this));
         _acceptChannel->setConnHandler(std::bind(&Server::handThisConn, this));
+        _slaveFDReactorPoolPtr->start();
         MainFDReactor::getInstance()->loop();
     }
 

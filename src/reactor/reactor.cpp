@@ -50,7 +50,13 @@ namespace reactor {
             abort();
         }
         _event_fd = createEventfd();
+
+        _slave_thread = std::make_shared<websocketagent::base::SlaveThread>(std::bind(&SlaveFDReactor::loop, this) ,"SlaveFDReactor");
     };
+
+    void SlaveFDReactor::run() {
+        _slave_thread->start();
+    }
 
     void MainFDReactor::init(uint16_t port) {
         _epollpoller = std::make_shared<EpollPoller>(_self_ptr.lock());

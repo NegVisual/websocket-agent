@@ -2,6 +2,7 @@
 #include <memory>
 #include <unordered_map>
 #include "singleton.h"
+#include "slaveThread.h"
 #include "epollPoller.h"
 
 namespace websocketagent {
@@ -42,6 +43,10 @@ class FDReactor {
 class SlaveFDReactor : public FDReactor {
     public:
         void init();
+
+        void run();
+    private:
+        std::shared_ptr<websocketagent::base::SlaveThread> _slave_thread;
 };
 
 class MainFDReactor : public websocketagent::base::Singleton<MainFDReactor>, public FDReactor {

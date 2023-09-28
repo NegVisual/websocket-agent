@@ -25,5 +25,11 @@ namespace reactor {
 
         return slave_reactor;
     }
+
+    void ReactorThreadPool::start() {
+        for(auto slave_thread : _fDReactorPool) {
+            slave_thread->run();
+        }
+    }
 }
 }
