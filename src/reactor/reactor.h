@@ -2,14 +2,15 @@
 #include <memory>
 #include <unordered_map>
 #include "singleton.h"
-#include "slaveThread.h"
 #include "epollPoller.h"
-
+#include "slaveThread.h"
 namespace websocketagent {
 namespace reactor {
 
 class EpollPoller;
 typedef std::shared_ptr<EpollPoller> EpollPollerPtr;
+
+class SlaveThread;
 
 class Channel;
 class AcceptChannel;
@@ -40,16 +41,16 @@ class FDReactor {
         bool _eventHandling;
 };
 
-class SlaveFDReactor : public FDReactor {
+class SlaveFDReactor : public FDReactor, public std::enable_shared_from_this<SlaveFDReactor> {
     public:
         void init();
 
         void run();
     private:
-        std::shared_ptr<websocketagent::base::SlaveThread> _slave_thread;
+        std::shared_ptr<SlaveThread> _slave_thread;
 };
 
-class MainFDReactor : public websocketagent::base::Singleton<MainFDReactor>, public FDReactor {
+class MainFDReactor : public Singleton<MainFDReactor>, public FDReactor {
     public:
         void init(uint16_t port);
 

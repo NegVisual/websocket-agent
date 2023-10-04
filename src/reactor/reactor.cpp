@@ -51,7 +51,7 @@ namespace reactor {
         }
         _event_fd = createEventfd();
 
-        _slave_thread = std::make_shared<websocketagent::base::SlaveThread>(std::bind(&SlaveFDReactor::loop, this) ,"SlaveFDReactor");
+        _slave_thread = std::make_shared<SlaveThread>(std::bind(&SlaveFDReactor::loop, this) ,"SlaveFDReactor");
     };
 
     void SlaveFDReactor::run() {

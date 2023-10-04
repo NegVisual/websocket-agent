@@ -6,7 +6,7 @@
 namespace websocketagent {
 namespace reactor {
 
-class ReactorThreadPool : public websocketagent::base::Noncopyable {
+class ReactorThreadPool : public Noncopyable {
     public:
         ReactorThreadPool(int numThreads);
 

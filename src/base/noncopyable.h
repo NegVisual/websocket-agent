@@ -1,7 +1,7 @@
 #pragma once
 
 namespace websocketagent {
-namespace base
+namespace reactor
 {
 
     class Noncopyable

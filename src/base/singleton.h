@@ -4,7 +4,7 @@
 #include <mutex>
 
 namespace websocketagent {
-namespace base {
+namespace reactor {
 
 // template<typename T>
 // class Singleton : public Noncopyable {
