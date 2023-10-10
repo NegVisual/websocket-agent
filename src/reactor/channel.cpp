@@ -26,7 +26,7 @@ namespace reactor {
     }
 
     void Channel::handleConn() {
-        std::cout << "Channel::handleConn: new connect receeived" <<std::endl;
+        std::cout << "Channel::handleConn: new connect received" <<std::endl;
         if (_connHandler) {
             _connHandler();
         }

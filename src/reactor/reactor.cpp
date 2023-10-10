@@ -52,6 +52,8 @@ namespace reactor {
         _event_fd = createEventfd();
 
         _slave_thread = std::make_shared<SlaveThread>(std::bind(&SlaveFDReactor::loop, this) ,"SlaveFDReactor");
+
+        _slave_thread->setReactor(shared_from_this());
     };
 
     void SlaveFDReactor::run() {
@@ -73,7 +75,7 @@ namespace reactor {
         _listenfd = socket_bind_listen(port);
 
         _acceptChannel = std::make_shared<Channel>(_listenfd);
-         _acceptChannel->setEvents(EPOLLIN | EPOLLET);
+        _acceptChannel->setEvents(EPOLLIN | EPOLLET);
         _epollpoller->epoll_add(_acceptChannel, 0);
     };
 

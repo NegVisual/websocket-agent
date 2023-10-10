@@ -16,7 +16,7 @@ void SlaveThread::start() {
 }
 
 void SlaveThread::runInThread() {
-
+  _func();
 }
 
 void SlaveThread::setReactor(std::shared_ptr<SlaveFDReactor> reactor) {

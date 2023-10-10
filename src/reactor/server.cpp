@@ -25,7 +25,10 @@ namespace reactor {
             //accept 新的连接
             std::shared_ptr<SlaveFDReactor> slave = _slaveFDReactorPoolPtr->getNextSlaveReactor();
             std::cout << "New connection from " << inet_ntoa(client_addr.sin_addr) << ":" << ntohs(client_addr.sin_port) <<std::endl;
-            // slave->_epollpoller->epoll_add();
+
+            //构建新的channel 并使用slave—reactor 监听该fd
+            std::shared_ptr<Channel> channel = std::make_shared<Channel>(accept_fd);
+            slave->_epollpoller->epoll_add(channel, 0);
         }else {
             std::cout << "Connection failed from " << inet_ntoa(client_addr.sin_addr) << ":" << ntohs(client_addr.sin_port) <<std::endl;
         }
