@@ -14,7 +14,7 @@ class SlaveFDReactor;
 
 class SlaveThread : public Noncopyable {
     public:
-        explicit SlaveThread(const ThreadFunc&, const std::string& name = "");
+        explicit SlaveThread(const ThreadFunc&, const int thread_index);
 
         ~SlaveThread();
 
@@ -28,7 +28,7 @@ class SlaveThread : public Noncopyable {
         ThreadFunc _func;
         std::thread::id _thread_id; //线程id
         pid_t _pid; //进程id
-        std::string _name;
+        int _thread_index;
         bool _started;
         bool _joined;
         std::shared_ptr<SlaveFDReactor> _reactor;

@@ -43,7 +43,7 @@ class FDReactor {
 
 class SlaveFDReactor : public FDReactor, public std::enable_shared_from_this<SlaveFDReactor> {
     public:
-        void init();
+        void init(int thread_index);
 
         void run();
     private:

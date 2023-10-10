@@ -42,7 +42,7 @@ namespace reactor {
 
     FDReactor::~FDReactor() {}
 
-    void SlaveFDReactor::init() {
+    void SlaveFDReactor::init(int thread_index) {
         _epollpoller = std::make_shared<EpollPoller>(_self_ptr.lock());
         if(_epollpoller.get() != nullptr) {
             _epoll_fd = _epollpoller->getEpollFd();
@@ -51,7 +51,7 @@ namespace reactor {
         }
         _event_fd = createEventfd();
 
-        _slave_thread = std::make_shared<SlaveThread>(std::bind(&SlaveFDReactor::loop, this) ,"SlaveFDReactor");
+        _slave_thread = std::make_shared<SlaveThread>(std::bind(&SlaveFDReactor::loop, this) ,thread_index);
 
         _slave_thread->setReactor(shared_from_this());
     };

@@ -10,7 +10,7 @@ namespace reactor {
         // 初始化 _slaveFDReactorPool 中的元素
         for (int i = 0; i < numThreads; ++i) {
             auto slave_reactor = std::make_shared<SlaveFDReactor>();
-            slave_reactor->init();
+            slave_reactor->init(i);
             _fDReactorPool.at(i) = slave_reactor;
         }
     }
