@@ -12,9 +12,11 @@ add_executable(${PROJECT_NAME}
                 src/reactor/server.cpp
                 src/reactor/reactorPool.cpp
                 src/reactor/epollPoller.cpp
-                src/base/slaveThread.cpp)
+                src/base/slaveThread.cpp
+                src/protocol/httpRequest.cpp)
 
 # 引入头文件目录
 target_include_directories(${PROJECT_NAME} 
                             PRIVATE ${CMAKE_SOURCE_DIR}/src/reactor
-                            PRIVATE ${CMAKE_SOURCE_DIR}/src/base)
+                            PRIVATE ${CMAKE_SOURCE_DIR}/src/base
+                            PRIVATE ${CMAKE_SOURCE_DIR}/src/protocol)

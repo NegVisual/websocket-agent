@@ -37,7 +37,7 @@ class FDReactor {
         int _epoll_fd;
         int _timer_fd;
         std::unordered_map<int, ChannelPtr> _fd2channel;
-
+        std::vector<std::function<void()>> _pendingFunctors;
         bool _eventHandling;
 };
 
@@ -46,6 +46,8 @@ class SlaveFDReactor : public FDReactor, public std::enable_shared_from_this<Sla
         void init(int thread_index);
 
         void run();
+
+        void pushEvent(std::function<void()>&& cb);
     private:
         std::shared_ptr<SlaveThread> _slave_thread;
 };

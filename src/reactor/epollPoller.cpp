@@ -23,7 +23,7 @@ ChannelList EpollPoller::poll(int32_t timeout) {
     int numEvents = epoll_wait(_epoll_fd, &*_epoll_events.begin(),
         static_cast<int>(_epoll_events.size()), timeout);
 
-    std::cout << "EpollPoller::poll numEvents:" << numEvents << std::endl;
+    // std::cout << "EpollPoller::poll numEvents: " << numEvents << std::endl;
 
     if (numEvents < 0) perror("epoll wait error");
     
@@ -33,7 +33,7 @@ ChannelList EpollPoller::poll(int32_t timeout) {
     {
         fillActiveChannels(numEvents, channel_list);
     }else if (numEvents == 0) {
-        std::cout << "nothing happened" << std::endl;
+        // std::cout << "nothing happened" << std::endl;
     }else {
         // error happens, log uncommon ones
         if (savedErrno != EINTR)

@@ -3,6 +3,7 @@
 #include <cstring>
 #include <arpa/inet.h>
 #include <netinet/in.h>
+#include "httpRequest.h"
 
 namespace websocketagent {
 namespace reactor {
@@ -26,9 +27,12 @@ namespace reactor {
             std::shared_ptr<SlaveFDReactor> slave = _slaveFDReactorPoolPtr->getNextSlaveReactor();
             std::cout << "New connection from " << inet_ntoa(client_addr.sin_addr) << ":" << ntohs(client_addr.sin_port) <<std::endl;
 
-            //构建新的channel 并使用slave—reactor 监听该fd
-            std::shared_ptr<Channel> channel = std::make_shared<Channel>(accept_fd);
-            slave->_epollpoller->epoll_add(channel, 0);
+            // 不能在主线程中 对slave_reactor 直接使用 epoll_add  因为主线程 和 子线程同时操作同一个fd 会产生静态条件 
+            // 可以将事件放入队列中 在slave_reactor 对应的 子线程运行时 从队列中取出事件 然后再屌用epoll_add 监听
+            std::shared_ptr<HttpRequest> http_request = std::make_shared<HttpRequest>(slave, accept_fd);
+            slave->pushEvent(std::bind(&HttpRequest::newEvent, http_request));
+                        
+            _acceptChannel->setEvents(EPOLLIN | EPOLLET);
         }else {
             std::cout << "Connection failed from " << inet_ntoa(client_addr.sin_addr) << ":" << ntohs(client_addr.sin_port) <<std::endl;
         }

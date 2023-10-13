@@ -33,8 +33,15 @@ namespace reactor {
 
             _eventHandling = true;
             for (auto& it : active_events) {
-                std::cout << "epoll return" << std::endl;
                 it->handleEvents();
+           }
+
+           //读取 pendingFunctors_ 主要是有其他线程 给 该线程 增加的task
+           std::vector<std::function<void()>> functors;
+           functors.swap(_pendingFunctors);
+           for (size_t i = 0; i < functors.size(); ++i) {
+                std::cout << "doing pending functor" << std::endl;
+                functors[i]();
            }
            _eventHandling = false;
         }
@@ -58,6 +65,10 @@ namespace reactor {
 
     void SlaveFDReactor::run() {
         _slave_thread->start();
+    }
+
+    void SlaveFDReactor::pushEvent(std::function<void()>&& cb) {
+        _pendingFunctors.emplace_back(std::move(cb));
     }
 
     void MainFDReactor::init(uint16_t port) {
